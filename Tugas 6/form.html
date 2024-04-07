@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<title>Form Registrasi</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .container {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 400px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  fieldset {
+    border: none;
+    padding: 0;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  td {
+    padding: 10px 0;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="tel"]:focus,
+  select:focus {
+    outline: none;
+    border-color: #66afe9;
+  }
+
+  input[type="submit"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf50;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
+  .error {
+    color: red;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Form Registrasi</h1>
+  <form id="formRegistrasi" name="formRegistrasi" method="get" action="proses.php">
+    <fieldset>
+      <table>
+        <tr>
+          <td>Nama:</td>
+          <td><input type="text" name="nama" id="nama" /></td>
+          <td><span id="namaSpan"></span></td>
+        </tr>
+        <tr>
+          <td>Username:</td>
+          <td><input type="text" name="username" id="username" /></td>
+          <td><span id="usernameSpan"></span></td>
+        </tr>
+        <tr>
+          <td>Email:</td>
+          <td><input type="email" name="email" id="email" /></td>
+          <td><span id="emailSpan"></span></td>
+        </tr>
+        <tr>
+          <td>Password:</td>
+          <td><input type="password" name="password" id="password" /></td>
+          <td><span id="passwordSpan"></span></td>
+        </tr>
+        <tr>
+          <td>No Telepon:</td>
+          <td><input type="tel" name="telepon" id="telepon" /></td>
+        </tr>
+        <tr>
+          <td>Jenis Kelamin:</td>
+          <td>
+            <select name="jenisKelamin" id="jenisKelamin">
+              <option value="laki-laki">Laki-laki</option>
+              <option value="perempuan">Perempuan</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>URL Website:</td>
+          <td><input type="url" name="website" size="40" id="website" /></td>
+        </tr>
+      </table>
+    </fieldset>
+    <br />
+    <input type="submit" name="submit" id="submit" value="Kirim Data" />
+  </form>
+</div>
+<script>
+  let formRegistrasiNode = document.getElementById("formRegistrasi");
+
+  let namaNode = document.getElementById("nama");
+  let namaSpanNode = document.getElementById("namaSpan");
+
+  let usernameNode = document.getElementById("username");
+  let usernameSpanNode = document.getElementById("usernameSpan");
+
+  let emailNode = document.getElementById("email");
+  let emailSpanNode = document.getElementById("emailSpan");
+
+  let passwordNode = document.getElementById("password");
+  let passwordSpanNode = document.getElementById("passwordSpan");
+
+  const diProses = (e) => {
+    let namaError = "";
+    if (namaNode.value.trim() === "") {
+      namaError = "Nama harus diisi";
+    }
+
+    if (namaError !== "") {
+      namaSpanNode.innerHTML = namaError;
+      namaSpanNode.className = "error";
+      e.preventDefault();
+    }
+
+    let usernameError = "";
+    if (usernameNode.value.trim() === "") {
+      usernameError = "Username harus diisi";
+    } else if (/\W/.test(usernameNode.value.trim())) {
+      usernameError = "Hanya bisa diisi karakter alfanumerik";
+    } else if (usernameNode.value.trim().length < 6) {
+      usernameError = "Username minimal 6 karakter";
+    }
+
+    if (usernameError !== "") {
+      usernameSpanNode.innerHTML = usernameError;
+      usernameSpanNode.className = "error";
+      e.preventDefault();
+    }
+
+    let emailError = "";
+    if (emailNode.value.trim() === "") {
+      emailError = "Email harus diisi";
+    } else if (!isValidEmail(emailNode.value.trim())) {
+      emailError = "Format email tidak valid";
+    }
+
+    if (emailError !== "") {
+      emailSpanNode.innerHTML = emailError;
+      emailSpanNode.className = "error";
+      e.preventDefault();
+    }
+  };
+
+  const hapusError = (e) => {
+    let parentTr = e.target.closest("tr");
+    parentTr.querySelector(".error").innerHTML = "";
+  };
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  formRegistrasiNode.addEventListener("submit", diProses);
+  namaNode.addEventListener("focus", hapusError);
+  usernameNode.addEventListener("focus", hapusError);
+  emailNode.addEventListener("focus", hapusError);
+</script>
+</body>
+</html>
